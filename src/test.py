@@ -13,7 +13,7 @@ logging_config = utils.load_logging_config("../config/logging.yaml")
 
 def test():
     # load environment
-    env = gym.make(config["env_name"])
+    env = gym.make(config["env_name"], render_mode="human")
 
     # load model / q-table
     q_table = np.load("../models/q_table.npy")
@@ -27,10 +27,10 @@ def test():
         logger.info("Episode: {}".format(episode+1))
         timesteps, penalties, reward, score = 0, 0, 0, 0
         done = False
-        state = env.reset()
+        state = env.reset()[0]
         while not done:
             action = np.argmax(q_table[state])
-            state, reward, done, info = env.step(action)
+            state, reward, done, info = (env.step(action)[:4])
 
             if reward == -10:
                 penalties += 1

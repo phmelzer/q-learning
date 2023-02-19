@@ -32,10 +32,10 @@ def train():
     for episode in range(config["training_episodes"]):
         timesteps, penalties, reward, score = 0, 0, 0, 0
         done = False
-        state = env.reset()
+        state = env.reset()[0]
         while not done:
             action = agent.choose_action(state)
-            next_state, reward, done, info = env.step(action)
+            next_state, reward, done, info = (env.step(action)[:4])
             agent.learn(state, action, reward, next_state)
 
             if reward == -10:
