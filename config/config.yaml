@@ -1,9 +1,8 @@
 training_episodes: 100000
 save_training: True
-render_training: False
+render: False
 learning_rate: 0.1
 discount_factor: 0.6
 eps: 0.1
-test_episodes: 3
-render_test: True
+test_episodes: 50
 env_name: "Taxi-v3"

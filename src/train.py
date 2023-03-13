@@ -1,5 +1,5 @@
 from agent import Agent
-import gym
+import gymnasium as gym
 import utils
 import numpy as np
 from logging import config
@@ -7,6 +7,7 @@ import logging
 from IPython.display import clear_output
 from time import sleep
 
+SEED = 42
 
 config = utils.load_config("../config/config.yaml")
 logging_config = utils.load_logging_config("../config/logging.yaml")
@@ -14,7 +15,10 @@ logging_config = utils.load_logging_config("../config/logging.yaml")
 
 def train():
     # load gym environment
-    env = gym.make(config["env_name"])
+    if config["render"]:
+        env = gym.make(config["env_name"], render_mode='human')
+    else:
+        env = gym.make(config["env_name"])
 
     # initialize agent
     agent = Agent(learning_rate=config["learning_rate"], discount_factor=config["discount_factor"],
@@ -32,21 +36,21 @@ def train():
     for episode in range(config["training_episodes"]):
         timesteps, penalties, reward, score = 0, 0, 0, 0
         done = False
-        state = env.reset()[0]
+        state, info = env.reset()
         while not done:
             action = agent.choose_action(state)
-            next_state, reward, done, info = (env.step(action)[:4])
+            next_state, reward, done, truncated, info = env.step(action)
             agent.learn(state, action, reward, next_state)
 
             if reward == -10:
                 penalties += 1
 
-            if config["render_training"]:
+            if config["render"]:
                 clear_output(wait=True)
                 env.render()
                 logger.info("Timesteps: {}, Action: {}, Penalties: {}, Score: {}".format(timesteps, action, penalties,
                                                                                          score))
-                sleep(0.5)
+                #sleep(0.5)
 
             state = next_state
             timesteps += 1
