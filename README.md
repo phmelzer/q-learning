@@ -1,6 +1,6 @@
 # q-learning
 
-Implementation of simple q-learning using a openai gym environment.
+Implementation of simple q-learning using a gymnasium (openai gym) environment. https://gymnasium.farama.org/
 
 # Train agent
 
